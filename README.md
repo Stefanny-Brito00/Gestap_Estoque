@@ -8,10 +8,10 @@ O sistema permite o cadastro de produtos, controle de lotes por validade, leitur
 
 ## 📸 Screenshots
 
-| TTELA INICIAL (Mobile) | TELA DE LOGIN. | RELATORIO | ADICIONAR PEODUTOS 
+| TELA INICIAL (Mobile) | TELA DE LOGIN. | RELATORIO | ADICIONAR PEODUTOS 
 |:---:|:---:|:---:|
-| ![Home] ![WhatsApp Image 2026-01-16 at 02 40 43](https://github.com/user-attachments/assets/8e15b106-acda-4fe2-b07f-67bff7363b76) | ![login] ![<img width="1902" height="953" alt="Captura de tela 2026-01-16 022527" src="https://github.com/user-attachments/assets/b5c572c4-245f-460c-a5a6-3d66bee9bddb" />]
-| ![Relatorios] ![(<img width="1907" height="951" alt="Captura de tela 2026-01-16 024050" src="https://github.com/user-attachments/assets/88dde31d-ef40-480b-829a-526e73128ead" />)] | ![ADD PRODUTOS] ![<img width="1918" height="957" alt="Captura de tela 2026-01-16 024127" src="https://github.com/user-attachments/assets/cfbdb3d2-3a34-4320-9501-97610ba8e31c" />]
+| [TELA INICIAL] [WhatsApp Image 2026-01-16 at 02 40 43](https://github.com/user-attachments/assets/8e15b106-acda-4fe2-b07f-67bff7363b76) | [LOGIN] ![<img width="1902" height="953" alt="Captura de tela 2026-01-16 022527" src="https://github.com/user-attachments/assets/b5c572c4-245f-460c-a5a6-3d66bee9bddb" />]
+| [RELATORIO] ![(<img width="1907" height="951" alt="Captura de tela 2026-01-16 024050" src="https://github.com/user-attachments/assets/88dde31d-ef40-480b-829a-526e73128ead" />)] | [ADD PRODUTOS] ![<img width="1918" height="957" alt="Captura de tela 2026-01-16 024127" src="https://github.com/user-attachments/assets/cfbdb3d2-3a34-4320-9501-97610ba8e31c" />]
 
 
 ---
