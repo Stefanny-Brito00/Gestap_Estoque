@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#121212">
+    <title>Estoque Pro</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <style>
+        /* --- ESTILOS (MANTIDOS IGUAIS) --- */
+        :root {
+            --bg-app: #121212;
+            --bg-card: #1e1e1e;
+            --bg-input: #2c2c2c;
+            --primary: #bb86fc;    
+            --secondary: #03dac6;  
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --danger: #cf6679;
+            --success: #03dac6;
+            --warning: #ffb74d;
+            --border: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            margin: 0; padding: 0; padding-bottom: 90px;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .app-header {
+            background-color: var(--bg-card);
+            padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .logo { font-size: 1.3rem; font-weight: 700; color: var(--primary); display:flex; align-items:center; gap:10px; text-shadow: 0 0 10px rgba(187, 134, 252, 0.3); }
+
+        .categorias-container {
+            display: flex; overflow-x: auto; padding: 20px 15px; gap: 15px;
+            background: var(--bg-app);
+        }
+        .categorias-container::-webkit-scrollbar { display: none; }
+        
+        .cat-btn {
+            background: none; border: none; 
+            display: flex; flex-direction: column; align-items: center; 
+            min-width: 75px; opacity: 0.6; cursor: pointer; transition: all 0.3s ease;
+        }
+        
+        .cat-btn .icon-circle {
+            width: 55px; height: 55px; background: var(--bg-card); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--text-main);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 1px solid var(--border); transition: all 0.3s ease;
+        }
+
+        .cat-btn span { color: var(--text-muted); font-size: 0.8rem; margin-top: 8px; font-weight: 500; }
+
+        .cat-btn.active { opacity: 1; transform: scale(1.05); }
+        .cat-btn.active .icon-circle {
+            background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 15px var(--primary);
+        }
+        .cat-btn.active span { color: var(--primary); }
+
+        .lista-container { padding: 10px 15px; min-height: 300px; }
+        
+        .card-produto {
+            background-color: var(--bg-card); border-radius: 16px; padding: 15px; 
+            margin-bottom: 15px; display: flex; align-items: center;
+            border: 1px solid var(--border); position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .status-green { border-left: 5px solid var(--success); }
+        .status-yellow { border-left: 5px solid var(--warning); }
+        .status-red { border-left: 5px solid var(--danger); }
+
+        .img-area {
+            width: 65px; height: 65px; background: #000; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; margin-right: 15px; overflow: hidden; border: 1px solid var(--border);
+        }
+        .prod-img { width: 100%; height: 100%; object-fit: cover; }
+        .prod-icon { font-size: 1.5rem; color: #444; }
+
+        .info-area { flex: 1; }
+        .info-area h3 { margin: 0; font-size: 1.1rem; color: var(--text-main); font-weight: 600;}
+        .info-area small { color: var(--text-muted); display: block; margin-top: 4px; font-size: 0.85rem; }
+        
+        .price-tag { 
+            text-align: right; font-weight: bold; font-size: 1.2rem; color: var(--secondary);
+            text-shadow: 0 0 5px rgba(3, 218, 198, 0.4);
+        }
+        
+        .badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 6px; font-weight: bold; text-transform: uppercase; display:inline-block; margin-bottom:4px; color: #000;}
+        .bg-red { background: var(--danger); }
+        .bg-orange { background: var(--warning); }
+
+        .bottom-nav {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            background: rgba(30, 30, 30, 0.95); backdrop-filter: blur(10px);
+            border-radius: 20px; display: flex; justify-content: space-around; align-items: center;
+            padding: 12px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #444; z-index: 90;
+        }
+        .nav-item { background: none; border: none; display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
+        .nav-item:active { transform: scale(0.95); }
+        .nav-item span { font-size: 0.7rem; margin-top: 4px; }
+        
+        .scan-wrapper { position: relative; top: -30px; }
+        .btn-scan {
+            width: 65px; height: 65px; border-radius: 50%; background: var(--primary); color: #000;
+            border: 5px solid var(--bg-app); font-size: 1.8rem; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 20px rgba(187, 134, 252, 0.6); cursor: pointer;
+        }
+        .btn-scan:active { transform: scale(0.95); box-shadow: 0 0 10px rgba(187, 134, 252, 0.8); }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 200; backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: flex-end;
+        }
+        .modal-content {
+            background: var(--bg-card); width: 100%; max-height: 85vh;
+            border-radius: 20px 20px 0 0; padding: 25px; overflow-y: auto;
+            border-top: 1px solid var(--border); animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .form-group { margin-bottom: 15px; }
+        .form-label { display: block; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 5px; }
+        .form-input, .form-select {
+            width: 100%; background: var(--bg-input); border: 1px solid #333;
+            color: #fff; padding: 12px; border-radius: 8px; font-size: 1rem; box-sizing: border-box;
+        }
+        .form-input:focus { outline: none; border-color: var(--primary); }
+        .form-row { display: flex; gap: 10px; }
+        
+        .btn-full {
+            width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 10px;
+        }
+        .btn-save { background: var(--secondary); color: #000; }
+        .btn-delete { background: var(--bg-input); color: var(--danger); border: 1px solid var(--danger); margin-top: 10px;}
+
+        .lote-item {
+            background: var(--bg-app); border: 1px solid var(--border);
+            padding: 10px; border-radius: 8px; margin-bottom: 8px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .lote-data { font-weight: bold; color: var(--text-main); display: flex; align-items: center; gap: 8px;}
+
+        #scanner-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 300; display: none;
+        }
+        #reader { width: 100%; height: 100%; }
+        .close-scanner {
+            position: absolute; top: 20px; right: 20px; z-index: 301;
+            color: #fff; font-size: 2rem; background: rgba(0,0,0,0.5); border-radius: 50%; padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="logo"><i class="fas fa-cube"></i> &nbsp;Estoque Pro</div>
+        <div style="color:var(--text-muted);" onclick="window.location.href='/logout'"><i class="fas fa-sign-out-alt"></i></div>
+    </header>
+
+    <div class="categorias-container">
+        <button class="cat-btn active" onclick="filtrar('Tudos')">
+            <div class="icon-circle"><i class="fas fa-layer-group"></i></div>
+            <span>Tudo</span>
+        </button>
+        <button class="cat-btn" onclick="filtrar('Frios e laticinios')">
+            <div class="icon-circle"><i class="fas fa-cheese"></i></div>
+            <span>Frios</span>
+        </button>
+        <button class="cat-btn" onclick="filtrar('Hortifrúti')">
+            <div class="icon-circle"><i class="fas fa-carrot"></i></div>
+            <span>Hortifrúti</span>
+        </button>
+        <button class="cat-btn" onclick="filtrar('Carnes e Proteínas')">
+            <div class="icon-circle"><i class="fas fa-drumstick-bite"></i></div>
+            <span>Carnes</span>
+        </button>
+        <button class="cat-btn" onclick="filtrar('Alimentos BÃ¡sicos')">
+            <div class="icon-circle"><i class="fas fa-bread-slice"></i></div>
+            <span>Básicos</span>
+        </button>
+        <button class="cat-btn" onclick="filtrar('Bebidas')">
+            <div class="icon-circle"><i class="fas fa-wine-bottle"></i></div>
+            <span>Bebidas</span>
+        </button>
+        <button class="cat-btn" onclick="filtrar('Limpeza e Higiene')">
+            <div class="icon-circle"><i class="fas fa-soap"></i></div>
+            <span>Limpeza</span>
+        </button>
+    </div>
+
+    <main class="lista-container" id="lista-produtos">
+        <p style="text-align:center; margin-top:50px; color:var(--text-muted)">Carregando...</p>
+    </main>
+
+    <nav class="bottom-nav">
+        <button class="nav-item" style="color:var(--primary)" onclick="carregarProdutos()">
+            <i class="fas fa-home"></i><span>Início</span>
+        </button>
+        
+        <button class="nav-item" onclick="abrirMenuIA()">
+            <i class="fas fa-robot"></i><span>IA</span>
+        </button>
+
+        <div class="scan-wrapper">
+            <button class="btn-scan" onclick="startBarcodeScanner()">
+                <i class="fas fa-qrcode"></i>
+            </button>
+        </div>
+
+        <button class="nav-item" onclick="abrirRelatorios()">
+            <i class="fas fa-chart-pie"></i><span>Relat.</span>
+        </button>
+
+        <button class="nav-item" onclick="abrirModalCadastro()">
+            <i class="fas fa-plus"></i><span>Novo</span>
+        </button>
+    </nav>
+
+
+    <div class="modal-overlay" id="modal-relatorios">
+        <div class="modal-content">
+            <h3 style="color:var(--primary); margin-bottom:20px;">
+                <i class="fas fa-chart-pie"></i> Resumo do Estoque
+            </h3>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px;">
+                <div style="background:var(--bg-input); padding:15px; border-radius:10px; text-align:center;">
+                    <small style="color:var(--text-muted)">Valor Total</small>
+                    <div id="rel-valor-total" style="font-size:1.2rem; font-weight:bold; color:var(--success); margin-top:5px;">R$ 0,00</div>
+                </div>
+                <div style="background:var(--bg-input); padding:15px; border-radius:10px; text-align:center;">
+                    <small style="color:var(--text-muted)">Total Itens</small>
+                    <div id="rel-qtd-total" style="font-size:1.2rem; font-weight:bold; color:var(--primary); margin-top:5px;">0</div>
+                </div>
+            </div>
+
+            <div style="background:var(--bg-app); border:1px solid var(--danger); padding:15px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="color:var(--danger)"><i class="fas fa-times-circle"></i> Vencidos</div>
+                <strong id="rel-vencidos" style="font-size:1.2rem; color:var(--danger)">0</strong>
+            </div>
+
+            <div style="background:var(--bg-app); border:1px solid var(--warning); padding:15px; border-radius:10px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="color:var(--warning)"><i class="fas fa-exclamation-triangle"></i> Baixo Estoque</div>
+                <strong id="rel-baixo" style="font-size:1.2rem; color:var(--warning)">0</strong>
+            </div>
+
+            <h4 style="color:var(--text-muted)">Por Categoria</h4>
+            <ul id="rel-lista-categorias" style="list-style:none; padding:0; margin:0; font-size:0.9rem;">
+            </ul>
+
+            <button class="btn-full" onclick="fecharModal('modal-relatorios')" style="margin-top:20px; background:transparent; border:1px solid var(--border); color:var(--text-muted)">
+                Fechar
+            </button>
+            <div style="height:30px;"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-cadastro">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                <h2 id="modal-titulo" style="margin:0; color:var(--primary)">Novo Produto</h2>
+                <i class="fas fa-times" onclick="fecharModal('modal-cadastro')" style="font-size:1.5rem; padding:5px; cursor:pointer"></i>
+            </div>
+
+            <form id="form-produto" onsubmit="salvarProduto(event)" enctype="multipart/form-data">
+                <input type="hidden" name="id" id="prod-id">
+
+                <div class="form-group">
+                    <label class="form-label">Código de Barras</label>
+                    <div class="form-row">
+                        <input type="text" name="codigo" id="prod-codigo" class="form-input" placeholder="Escaneie ou digite..." required>
+                        <button type="button" onclick="startBarcodeScanner()" style="background:var(--bg-input); border:1px solid var(--border); color:#fff; width:50px; border-radius:8px; cursor:pointer"><i class="fas fa-camera"></i></button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Nome do Produto</label>
+                    <input type="text" name="nome" id="prod-nome" class="form-input" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex:1">
+                        <label class="form-label">Preço (R$)</label>
+                        <input type="number" step="0.01" name="preco" id="prod-preco" class="form-input">
+                    </div>
+                    <div class="form-group" style="flex:1">
+                        <label class="form-label">Quantidade</label>
+                        <input type="number" name="qtd" id="prod-qtd" class="form-input" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Categoria</label>
+                    <select name="categoria" id="prod-categoria" class="form-select">
+                        <option value="Alimentos BÃ¡sicos">Alimentos Básicos</option>
+                        <option value="Frios e laticinios">Frios e Laticínios</option>
+                        <option value="Hortifrúti">Hortifrúti</option>
+                        <option value="Carnes e Proteínas">Carnes e Proteínas</option>
+                        <option value="Bebidas">Bebidas</option>
+                        <option value="Limpeza e Higiene">Limpeza e Higiene</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex:1">
+                        <label class="form-label">Validade</label>
+                        <input type="date" name="validade" id="prod-validade" class="form-input" required>
+                    </div>
+                    <div class="form-group" style="flex:1">
+                        <label class="form-label">Mínimo (Alerta)</label>
+                        <input type="number" name="min_estoque" id="prod-min" class="form-input" value="5">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Foto do Produto</label>
+                    <input type="file" name="foto" class="form-input" accept="image/*" onchange="previewImagem(this)">
+                    <img id="img-preview" src="" style="width:100%; height:150px; object-fit:contain; margin-top:10px; display:none; border:1px dashed #444; border-radius:8px;">
+                </div>
+
+                <button type="submit" class="btn-full btn-save">Salvar Produto</button>
+                <button type="button" id="btn-excluir" class="btn-full btn-delete" style="display:none">Excluir Lote</button>
+            </form>
+            <div style="height:50px;"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-detalhes">
+        <div class="modal-content">
+            <div style="text-align:center; margin-bottom:20px;">
+                <div style="width:50px; height:5px; background:var(--border); margin:0 auto 15px auto; border-radius:10px;"></div>
+                <h2 id="detalhe-titulo" style="margin:0; color:var(--primary)">Nome Produto</h2>
+                <small style="color:var(--text-muted)">Estoque Total: <span id="detalhe-total" style="color:var(--secondary); font-weight:bold">0</span> un</small>
+            </div>
+
+            <h4 style="color:var(--text-muted); margin-bottom:10px;">Lotes neste produto (FIFO)</h4>
+            <div id="lista-lotes"></div>
+
+            <button class="btn-full" id="btn-add-lote" style="background:var(--primary); color:#000">
+                <i class="fas fa-plus-circle"></i> Adicionar Novo Lote
+            </button>
+            
+            <button class="btn-full" onclick="fecharModal('modal-detalhes')" style="background:transparent; border:1px solid var(--border); color:var(--text-muted); margin-top:10px;">
+                Fechar
+            </button>
+            <div style="height:30px;"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-ia">
+        <div class="modal-content">
+            <h3 style="color:var(--primary)"><i class="fas fa-robot"></i> Inteligência Artificial</h3>
+            <p style="color:var(--text-muted); font-size:0.9rem">A IA analisará seus produtos para sugerir compras e promoções baseadas na validade.</p>
+            
+            <div class="ia-controls">
+                <button class="btn-full" onclick="chamarIA()" style="background: linear-gradient(45deg, #bb86fc, #3700b3); color:white; border:none;">
+                    Gerar Análise Agora
+                </button>
+            </div>
+
+            <div id="ia-loading" style="display:none; text-align:center; padding:20px;">
+                <i class="fas fa-circle-notch fa-spin" style="font-size:2rem; color:var(--primary)"></i>
+                <p>Processando estoque...</p>
+            </div>
+
+            <div id="ia-resultado" style="margin-top:20px; background:var(--bg-input); padding:15px; border-radius:10px; font-size:0.9rem; line-height:1.5; display:none;"></div>
+
+            <button class="btn-full" onclick="fecharModal('modal-ia')" style="margin-top:20px; background:transparent; border:1px solid var(--border)">Fechar</button>
+        </div>
+    </div>
+
+    <div id="scanner-container">
+        <div class="close-scanner" onclick="stopScanner()">&times;</div>
+        <div id="reader"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

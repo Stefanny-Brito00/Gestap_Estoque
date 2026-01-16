@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <!-- Cor da barra do navegador -->
+    <meta name="theme-color" content="#121212">
+    <title>Login - Estoque</title>
+    <!-- Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- ESTILOS DARK (Embutidos para garantir o visual) --- */
+        :root {
+            --bg-app: #121212;       /* Fundo Preto Fosco */
+            --bg-card: #1e1e1e;      /* Cartão Cinza Escuro */
+            --bg-input: #2c2c2c;     /* Input mais claro */
+            --primary: #bb86fc;      /* Roxo Neon */
+            --secondary: #03dac6;    /* Ciano Neon */
+            --text-main: #e0e0e0;    /* Branco Suave */
+            --text-muted: #a0a0a0;   /* Cinza Texto */
+            --danger: #cf6679;       /* Vermelho Erro */
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            margin: 0; padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .logo-big {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: var(--primary);
+            text-shadow: 0 0 20px rgba(187, 134, 252, 0.4);
+            letter-spacing: 2px;
+        }
+        .logo-big i { margin-right: 10px; }
+
+        .login-card {
+            background-color: var(--bg-card);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            border: 1px solid #333;
+        }
+
+        h2 { margin: 0 0 30px 0; color: var(--text-main); font-weight: normal; font-size: 1.5rem; }
+        
+        /* Inputs Estilizados */
+        .input-group { position: relative; margin-bottom: 20px; }
+        
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+            font-size: 1.1rem;
+            z-index: 10;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            background-color: var(--bg-input);
+            border: 1px solid #333;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        input::placeholder { color: #666; }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: #333;
+            box-shadow: 0 0 15px rgba(187, 134, 252, 0.15);
+        }
+
+        /* Botão Principal */
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(187, 134, 252, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+        }
+
+        .btn-login:hover {
+            background-color: #a370f7;
+            transform: translateY(-2px);
+        }
+
+        .btn-login:active { transform: scale(0.98); }
+
+        .footer-links {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .footer-links a { color: var(--secondary); text-decoration: none; cursor: pointer; }
+
+        /* Mensagens de Erro */
+        .alert {
+            background: rgba(207, 102, 121, 0.2);
+            border: 1px solid var(--danger);
+            color: #ffb0b0;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            text-align: left;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- Logo Grande -->
+        <div class="logo-big">
+            <i class="fas fa-cube"></i> Estoque
+        </div>
+
+        <!-- Cartão de Login -->
+        <div class="login-card">
+            <h2>Bem-vindo</h2>
+            
+            <!-- Mostra mensagens de erro vindas do Python (ex: Senha incorreta) -->
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert">
+                            <i class="fas fa-exclamation-triangle"></i> {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <!-- FORMULÁRIO CORRIGIDO: method="POST" envia para o Python -->
+            <form method="POST" onsubmit="iniciarLogin()">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <!-- name="user" é OBRIGATÓRIO para o Python ler -->
+                    <input type="text" name="user" placeholder="Usuário" required autocomplete="off">
+                </div>
+
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <!-- name="pass" é OBRIGATÓRIO para o Python ler -->
+                    <input type="password" name="pass" placeholder="Senha" required>
+                </div>
+
+                <button type="submit" class="btn-login" id="btn-entrar">
+                    <span>ENTRAR</span> <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="footer-links">
+                Esqueceu a senha? <a onclick="alert('Entre em contato com o suporte do sistema.')">Recuperar</a>
+            </div>
+        </div>
+
+        <p style="margin-top: 40px; color: #333; font-size: 0.8rem;">
+            Sistema de Gestão &bull; v2.0
+        </p>
+    </div>
+
+    <script>
+        // Dá feedback visual quando clica em Entrar
+        function iniciarLogin() {
+            const btn = document.getElementById('btn-entrar');
+            const icon = btn.querySelector('i');
+            const span = btn.querySelector('span');
+            
+            btn.style.opacity = "0.7";
+            span.innerText = "VERIFICANDO...";
+            icon.className = "fas fa-circle-notch fa-spin"; // Ícone girando
+        }
+    </script>
+
+</body>
+</html>

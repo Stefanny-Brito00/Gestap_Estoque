@@ -1,0 +1,272 @@
+:root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; }
+body { font-family: sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
+
+/* Header Fixo */
+.app-header { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+.app-header button { background: none; border: none; color: white; font-size: 1.2rem; }
+
+/* Dashboard Grid */
+.dashboard { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 15px; }
+.card { background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; }
+.icon { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; color: white; font-size: 1.2rem; }
+.green { background: #2ecc71; } .blue { background: #3498db; } .purple { background: #9b59b6; }
+
+/* Lista */
+.lista-container { padding: 0 15px; }
+.item-produto { background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.border-red { border-left-color: #e74c3c; background: #fff5f5; } /* Vencido */
+.border-orange { border-left-color: #f39c12; } /* Alerta */
+.border-green { border-left-color: #2ecc71; } /* OK */
+
+.preco { font-weight: bold; color: var(--primary); margin-top: 5px; }
+
+/* Modal e Scanner */
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: center; }
+.modal-content { background: white; padding: 20px; width: 90%; border-radius: 10px; max-width: 400px; }
+input { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+button[type="submit"] { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; margin-top: 10px; font-size: 1rem; }
+#scanner-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 300; }
+.btn-cancel { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); padding: 10px 30px; background: red; color: white; border: none; font-size: 1.2rem; border-radius: 30px; }
+
+/* Nav de Categorias (Horizontal com rolagem no celular) */
+.categorias-nav {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px;
+    background: white;
+    gap: 10px;
+    white-space: nowrap;
+    border-bottom: 1px solid #ddd;
+}
+.categorias-nav button {
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background: white;
+    color: #666;
+    cursor: pointer;
+}
+.categorias-nav button.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Card Produto Melhorado */
+.card-produto {/* --- TEMA DARK NEON (DEFINITIVO) --- */
+:root {
+    --bg-app: #121212;
+    --bg-card: #1e1e1e;
+    --bg-input: #2c2c2c;
+    --primary: #bb86fc;
+    --secondary: #03dac6;
+    --text-main: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --danger: #cf6679;
+    --success: #03dac6;
+    --warning: #ffb74d;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    margin: 0; padding: 0; padding-bottom: 90px;
+    user-select: none;
+}
+
+/* Header */
+.app-header {
+    background-color: var(--bg-card);
+    padding: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid #333;
+}
+.logo { font-size: 1.4rem; font-weight: bold; color: var(--primary); text-shadow: 0 0 10px rgba(187, 134, 252, 0.3); }
+.btn-sair { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+
+/* Categorias */
+.categorias-container {
+    display: flex; overflow-x: auto; padding: 20px 10px; gap: 15px; background: var(--bg-app);
+}
+.categorias-container::-webkit-scrollbar { display: none; }
+
+.cat-btn {
+    background: none; border: none; display: flex; flex-direction: column; align-items: center; min-width: 75px; opacity: 0.6; cursor: pointer; transition: all 0.3s ease;
+}
+.cat-btn.active { opacity: 1; transform: scale(1.05); }
+
+.icon-circle {
+    width: 55px; height: 55px; background: var(--bg-card); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--text-main);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 1px solid #333; transition: all 0.3s ease;
+}
+.cat-btn.active .icon-circle {
+    background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 15px var(--primary);
+}
+.cat-btn span { color: var(--text-muted); font-size: 0.8rem; margin-top: 8px; font-weight: 500; }
+.cat-btn.active span { color: var(--primary); }
+
+/* Lista de Produtos */
+.lista-container { padding: 10px 15px; min-height: 300px; }
+
+@keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.card-produto {
+    background-color: var(--bg-card); border-radius: 16px; padding: 15px; margin-bottom: 15px;
+    display: flex; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border: 1px solid #333; position: relative; overflow: hidden;
+    animation: slideIn 0.3s ease-out;
+    cursor: pointer;
+}
+.img-area {
+    width: 65px; height: 65px; background: #000; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; margin-right: 15px; border: 1px solid #333; overflow: hidden;
+}
+.prod-img { width: 100%; height: 100%; object-fit: cover; }
+.prod-icon { font-size: 1.8rem; color: #444; }
+
+.info-area { flex: 1; }
+.info-area h3 { margin: 0; font-size: 1.1rem; color: var(--text-main); }
+.info-area small { color: var(--text-muted); display: block; margin-top: 4px; font-size: 0.85rem; }
+
+.card-badges { display: flex; gap: 5px; margin-top: 5px; }
+.badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 6px; color: #000; font-weight: bold; text-transform: uppercase; }
+.bg-red { background: var(--danger); }
+.bg-orange { background: var(--warning); }
+
+.price-tag { text-align: right; font-weight: bold; color: var(--secondary); font-size: 1.2rem; text-shadow: 0 0 5px rgba(3, 218, 198, 0.4); }
+
+/* Status Lateral Colorido */
+.status-green { border-left: 5px solid var(--success); }
+.status-yellow { border-left: 5px solid var(--warning); }
+.status-red { border-left: 5px solid var(--danger); }
+
+/* Menu Inferior */
+.bottom-nav {
+    position: fixed; bottom: 20px; left: 20px; right: 20px;
+    background: rgba(30, 30, 30, 0.95); backdrop-filter: blur(10px);
+    border-radius: 20px; display: flex; justify-content: space-around; align-items: center;
+    padding: 12px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #444; z-index: 90;
+}
+.nav-item { background: none; border: none; display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
+.nav-item:active { transform: scale(0.95); }
+.nav-item span { font-size: 0.7rem; margin-top: 4px; }
+
+.scan-wrapper { position: relative; top: -30px; }
+.btn-scan {
+    width: 65px; height: 65px; border-radius: 50%; background: var(--primary); color: #000;
+    border: 5px solid var(--bg-app); font-size: 1.8rem; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 20px rgba(187, 134, 252, 0.6); cursor: pointer;
+}
+.btn-scan:active { transform: scale(0.95); box-shadow: 0 0 10px rgba(187, 134, 252, 0.8); }
+
+/* Modais e Formulários (Essencial para funcionar) */
+.modal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: end;
+}
+.modal-content {
+    background: var(--bg-card); width: 100%; max-width: 500px;
+    border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px;
+    max-height: 90vh; overflow-y: auto; border-top: 1px solid #444;
+}
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.close { color: var(--text-muted); font-size: 2rem; cursor: pointer; }
+
+/* Inputs do Modal */
+.input-icon-group { position: relative; margin-bottom: 15px; }
+.icon-input { position: absolute; left: 15px; top: 14px; color: var(--secondary); }
+input, select {
+    width: 100%; padding: 14px 14px 14px 45px;
+    border: 1px solid #333; border-radius: 12px; background: var(--bg-input); color: white;
+    font-size: 1rem; box-sizing: border-box;
+}
+.row { display: flex; gap: 10px; }
+.half { flex: 1; }
+
+.btn-full {
+    width: 100%; padding: 15px; border: none; border-radius: 12px;
+    font-size: 1rem; font-weight: bold; color: #000; cursor: pointer; margin-top: 10px;
+    display: flex; justify-content: center; gap: 10px; align-items: center;
+}
+.blue { background: var(--primary); }
+.green { background: var(--success); }
+.red { background: var(--danger); }
+
+/* IA e Listas */
+.lote-item { background: var(--bg-input); padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; }
+.resumo-box { background: var(--bg-input); padding: 15px; border-radius: 15px; display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border: 1px solid #333; }
+.icone-gigante { font-size: 2.5rem; color: var(--secondary); }
+.ia-resultado-box { background: var(--bg-input); padding: 15px; border-radius: 10px; margin-top: 15px; line-height: 1.6; }
+
+/* Scanner Overlay */
+#scanner-container { background: #000; display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 300; }
+.btn-cancel-scan { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--danger); color: white; padding: 12px 30px; border: none; border-radius: 30px; font-weight: bold; }
+    display: flex;
+    background: white;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    border-left: 5px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+.img-area { width: 60px; height: 60px; margin-right: 15px; }
+.prod-img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.prod-icon { width: 100%; height: 100%; background: #eee; display: flex; align-items: center; justify-content: center; border-radius: 8px; color: #aaa; }
+
+.info-area { flex: 1; }
+.topo { display: flex; justify-content: space-between; align-items: start; }
+.detalhes { display: flex; justify-content: space-between; margin-top: 5px; }
+
+/* Cores de Alerta */
+.border-red { border-left-color: #e74c3c; background: #fff5f5; }
+.border-yellow { border-left-color: #f1c40f; }
+.border-green { border-left-color: #2ecc71; }
+
+.badge { font-size: 0.7em; padding: 2px 6px; border-radius: 4px; color: white; margin-left: 5px; }
+.badge.red { background: #e74c3c; }
+.badge.yellow { background: #f1c40f; color: black; }
+.badge.orange { background: #e67e22; }
+
+/* Botão Excluir */
+.btn-delete { background: #c0392b; margin-top: 10px; }
+
+/* Lista de Lotes no Modal */
+.lista-lotes-container {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.lote-item {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background: #f9f9f9;
+}
+.lote-item:hover { background: #eee; }
+
+.lote-data { font-weight: bold; display: block; }
+.lote-qtd { font-size: 0.9em; color: #666; }
+
+.texto-red { color: #c0392b; background: #fff0f0; }
+.texto-orange { color: #e67e22; }
+
+.resumo-topo {
+    text-align: center;
+    background: #f4f7f6;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.big-number { font-size: 2em; font-weight: bold; color: var(--primary); }
+.legenda { font-size: 0.8em; color: #999; text-align: center; margin-bottom: 5px; }
