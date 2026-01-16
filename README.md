@@ -65,16 +65,16 @@ python -m venv venv
 python3 -m venv venv
 source venv/bin/activate
 
-3. Instale as dependências:
+Instale as dependências:
 
    pip install -r requirements.txt
    
-5. Execute a aplicação:
+Execute a aplicação:
 
     python app.py
    
-6. Acesse no navegador:
-7. 
+Acesse no navegador:
+   
 Abra http://localhost:5000
 
 Login Padrão:
